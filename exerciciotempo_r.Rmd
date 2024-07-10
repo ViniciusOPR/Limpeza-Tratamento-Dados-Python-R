@@ -1,0 +1,93 @@
+---
+Exercício - Limpeza e Tratamento de Dados em R - TEMPO(Clima)
+---
+
+```{r}
+dados = read.csv("tempo.csv", sep = ";", na.strings = "", stringsAsFactors = T)
+dados
+summary(dados)
+```
+Explorando Aparencia e Jogar
+```{r}
+#Aparencia
+counts = table(dados$Aparencia)
+barplot(counts, main="Aparencia", xlab="Aparencia")
+#Jogar
+counts = table(dados$Jogar)
+barplot(counts, main="Jogar", xlab = "Jogar")
+```
+Tratando Aparencia
+```{r}
+#Vendo valores
+unique(dados$Aparencia)
+summary(dados$Aparencia)
+#Transformando "Menos" em chuva (MODA)
+dados[dados$Aparencia == "menos",]$Aparencia = "chuva"
+#Conferindo resultado
+summary(dados$Aparencia)
+#Remover levels não utilizados
+dados$Aparencia = factor(dados$Aparencia)
+summary(dados$Aparencia)
+```
+Explorando vento
+```{r}
+#vento
+counts_vento = table(dados$Vento)
+barplot(counts_vento, main="Vento", xlab="Vento")
+summary(dados$Vento)
+```
+Tratando Vento - Removendo NAs
+```{r}
+#Transformando o NA em FALSO(Moda)
+dados[is.na(dados$Vento),]$Vento = "FALSO"
+summary(dados$Vento)
+```
+Explorando temperatura
+```{r}
+summary(dados$Temperatura)
+boxplot(dados$Temperatura, outline = F)
+hist(dados$Temperatura)
+```
+Tratando temperatura
+```{r}
+summary(dados$Temperatura)
+#Não há valores NAs
+dados[is.na(dados$Temperatura) ,]
+#Verificando temperaturas anormais
+dados[dados$Temperatura < -130 | dados$Temperatura > 130 ,]
+#Preencher com Mediana
+median(dados$Temperatura)
+#Substituindo
+dados[dados$Temperatura < -130 | dados$Temperatura > 130 ,]$Temperatura = median(dados$Temperatura)
+#buscando dados anormais
+dados[dados$Temperatura < -130 | dados$Temperatura > 130 ,]
+summary(dados$Temperatura)
+```
+Explorando Umidade
+```{r}
+summary(dados$Umidade)
+boxplot(dados$Umidade, outline = F)
+hist(dados$Umidade)
+```
+Tratando Umidade
+```{r}
+summary(dados$Umidade)
+#Há valores NAs
+dados[is.na(dados$Umidade),]
+#verificando umidades anormais
+dados[dados$Umidade < 0 | dados$Umidade > 100 ,]
+#Preencher com Mediana
+median(dados$Umidade, na.rm = T)
+#Substituindo
+dados[is.na(dados$Umidade) | dados$Umidade > 100 ,]$Umidade = median(dados$Umidade,na.rm = T)
+#Verificando
+summary(dados$Umidade)
+dados[dados$Umidade < 0 | dados$Umidade > 100 ,]
+dados[is.na(dados$Umidade),]
+```
+Visualizando Base de Dados final
+```{r}
+dados
+```
+
+
